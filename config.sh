@@ -3,7 +3,7 @@
 #ARCH=x86_64
 #ARCH=powerpc
 #ARCH=arm
-#ARCH=aarch64
+ARCH=aarch64
 #ARCH=microblaze
 #ARCH=mips
 #ARCH=mipsel
@@ -36,3 +36,7 @@ GCC_STAGE1_NOOPT=1
 
 # Enable build of GMP, MPC, MPFR
 GCC_BUILTIN_PREREQS=yes
+
+MUSL_GIT_VERSION=1c315df79d823acdc66a6d3aa6d95dcf29e03666
+MUSL_VERSION=master
+MUSL_GIT=yes

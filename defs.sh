@@ -41,7 +41,9 @@ MPFR_VERSION=3.1.2
 # be set to a git tag and MUSL_GIT set to yes in config.sh
 MUSL_DEFAULT_VERSION=0.9.15
 MUSL_GIT_VERSION=b589fb4e2999026494fa4bced90aeca9e613f754
-MUSL_GIT_REPO='git://repo.or.cz/musl.git'
+#MUSL_GIT_VERSION=1c315df79d823acdc66a6d3aa6d95dcf29e03666
+#MUSL_GIT_REPO='git://repo.or.cz/musl.git'
+MUSL_GIT_REPO='https://github.com/crxz0193/musl-aarch64/archive'
 MUSL_VERSION="$MUSL_DEFAULT_VERSION"
 MUSL_GIT=no
 
@@ -80,8 +82,8 @@ then
             ;;
 
 	aarch64)
-	    TRIPLE="aarch64-linux-musl"
-	    ;;
+	    	TRIPLE="aarch64-linux-musl"
+	    	;;
 
         x32)
             TRIPLE="x86_64-x32-linux-musl"
@@ -159,10 +161,12 @@ fetch() {
 extract() {
     if [ ! -e "$2/extracted" ]
     then
+	echo "extracting ... " $MUSL_CC_BASE/tarballs/$1
         tar xf "$MUSL_CC_BASE/tarballs/$1" ||
             tar Jxf "$MUSL_CC_BASE/tarballs/$1" ||
             tar jxf "$MUSL_CC_BASE/tarballs/$1" ||
-            tar zxf "$MUSL_CC_BASE/tarballs/$1"
+            tar zxf "$MUSL_CC_BASE/tarballs/$1"  ||
+			unzip "$MUSL_CC_BASE/tarballs/$1"
         mkdir -p "$2"
         touch "$2/extracted"
     fi
@@ -174,17 +178,20 @@ fetchextract() {
 }
 
 gitfetchextract() {
-    if [ ! -e "$MUSL_CC_BASE/tarballs/$3".tar.gz ]
+    if [ ! -e "$MUSL_CC_BASE/tarballs/$3".zip ]
     then
-        git archive --format=tar --remote="$1" "$2" | \
-            gzip -c > "$MUSL_CC_BASE/tarballs/$3".tar.gz || die "Failed to fetch $3-$2"
+        #git archive --format=tar --remote="$1" "$2" | \
+        #    gzip -c > "$MUSL_CC_BASE/tarballs/$3".tar.gz || die "Failed to fetch $3-$2"
+		curl -L -o $3.zip $1/$MUSL_VERSION.zip
+		mv $3.zip $MUSL_CC_BASE/tarballs/
     fi
     if [ ! -e "$3/extracted" ]
     then
         mkdir -p "$3"
         (
         cd "$3" || die "Failed to cd $3"
-        extract "$3".tar.gz extracted
+         extract "$3".zip extracted
+		mv $MUSL_CC_BASE/$3/musl-aarch64-$MUSL_VERSION $MUSL_CC_BASE/$3/$3
         touch extracted
         )
     fi
