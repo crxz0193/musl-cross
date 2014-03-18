@@ -106,7 +106,7 @@ then
     # musl in CC prefix
     PREFIX="$CC_PREFIX/$TRIPLE"
     muslfetchextract
-    buildinstall '' musl-$MUSL_VERSION \
+    buildinstall '' musl-$MUSL_VERSION/musl-$MUSL_VERSION \
         --enable-debug CC="$TRIPLE-gcc" $MUSL_CONFFLAGS
     unset PREFIX
     PREFIX="$CC_PREFIX"
